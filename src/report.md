@@ -137,7 +137,7 @@ Start a virtual machine (hereafter -- ws1)
 
 ``ping 192.168.100.10``
 
-![ws1](img/iprws2.png)
+![ws1](img/ipws2.png)
 
 ### Part 2.2
 

@@ -38,3 +38,21 @@ Start a virtual machine (hereafter -- ws1)
 - /8
     - 12.0.0.1
     - 12.255.255.254
+![ipcalc](img/ipcalc6.png)
+
+- /4
+    - 0.0.0.1
+    - 15.255.255.254
+![ipcalc](img/ipcalc7.png)
+
+- /16 = 11111111.11111111.00000000.00000000
+    - 12.167.0.1
+    - 12.167.255.254
+![ipcalc](img/ipcalc8.png)
+
+- /23 = 255.255.254.0
+    - 12.167.38.1
+    - 12.167.39.255
+![ipcalc](img/ipcalc9.png)
+
+### Part 1.2

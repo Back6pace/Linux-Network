@@ -1,4 +1,4 @@
-## Part 1. ipcalc tool
+## Part 1
 
 Start a virtual machine (hereafter -- ws1)
 
@@ -97,3 +97,23 @@ Start a virtual machine (hereafter -- ws1)
 ``10.10.100.1`` - нет<br>
 ``10.10.1.255`` - нет
 
+## Part 2
+
+Поднять две виртуальные машины (далее -- ws1 и ws2)
+![2ws](img/2ws.png)
+
+``ip a``
+
+- ws1
+![ws1](img/ipaws1.png)
+
+- ws2
+![ws1](img/ipaws2.png)
+
+Описать сетевой интерфейс, соответствующий внутренней сети, на обеих машинах и задать следующие адреса и маски: ws1 - 192.168.100.10, маска /16, ws2 - 172.24.116.8, маска /12
+
+- ws1
+![ws1](img/netws1.png)
+
+- ws2
+![ws1](img/netws2.png)

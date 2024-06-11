@@ -105,15 +105,59 @@ Start a virtual machine (hereafter -- ws1)
 ``ip a``
 
 - ws1
+
 ![ws1](img/ipaws1.png)
 
 - ws2
-![ws1](img/ipaws2.png)
+
+![ws2](img/ipaws2.png)
 
 Описать сетевой интерфейс, соответствующий внутренней сети, на обеих машинах и задать следующие адреса и маски: ws1 - 192.168.100.10, маска /16, ws2 - 172.24.116.8, маска /12
 
 - ws1
+
 ![ws1](img/netws1.png)
 
 - ws2
-![ws1](img/netws2.png)
+
+![ws2](img/netws2.png)
+
+### Part 2.1
+
+Добавить статический маршрут от одной машины до другой и обратно при помощи команды вида ``ip r add``<br>
+Пропинговать соединение между машинами
+
+``sudo ip r add 172.24.116.8 dev enp0s3``
+
+``ping 172.24.116.8``
+
+![ws1](img/iprws1.png)
+
+``sudo ip r add 192.168.100.10 dev enp0s3``
+
+``ping 192.168.100.10``
+
+![ws1](img/iprws2.png)
+
+### Part 2.2
+
+- Перезапустить машины
+- `sudo reboot` x2
+
+- Добавить статический маршрут от одной машины до другой с помощью файла *etc/netplan/00-installer-config.yaml*
+
+- ws1
+![ws1](img/netws1.1.png)
+
+- ws2
+![ws1](img/netws2.2.png)
+
+- Пропинговать соединение между машинами
+
+- ws1
+``ping -c 4 172.24.116.8``
+![ws1](img/pingws1.png)
+
+- ws2
+``ping -c 4 192.168.100.10``
+![ws1](img/pingws2.png)

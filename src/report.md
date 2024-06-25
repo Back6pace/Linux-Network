@@ -231,8 +231,17 @@ Network Address Translation - это механизм в сетях TCP/IP, по
 > Мануал на данную утилиту -> [здесь](https://www.opennet.ru/man.shtml?topic=iptables&category=8&russian=0)<br>
 Более подробный вы можете найти -> [тут](https://losst.pro/nastrojka-iptables-dlya-chajnikov)
 >- **iptables** - инструмент администрирования фильтра пакетов IPv4 и NAT 
-> - **Использование `iptables`**
->   
+> - **Использование `iptables`**<br>
+> -A - добавить правило в цепочку;<br>
+> -С - проверить все правила;<br>
+> -D - удалить правило;<br>
+> -I - вставить правило с нужным номером;<br>
+> -L - вывести все правила в текущей цепочке;<br>
+> -S - вывести все правила;<br>
+> -F - очистить все правила;<br>
+> -N - создать цепочку;<br>
+> -X - удалить цепочку;<br>
+> -P - установить действие по умолчанию.
 
 Создай файл /etc/firewall.sh, имитирующий фаерволл, на ws1 и ws2:
 
@@ -253,7 +262,38 @@ iptables -X
 5. Разрешить echo reply (машина должна "пинговаться")
 
 - ws1
-![Alt text](<img/iptable ws1.png>)
+![!\[Alt text\](<img/iptable ws1.png>)](<img/iptable ws1.png>)
 
 - ws2
 ![Alt text](<img/iptables ws2.png>)
+
+Разница в том что в первом файле первое правило запрета а во втором разрешения на отправку пакетов. Последующие правила будут игнорироваться
+
+Запусти файлы на обеих машинах командами ``chmod +x /etc/firewall.sh и /etc/firewall.sh.``
+
+![Alt text](<img/chmod ws1.png>)
+![Alt text](<img/chmod ws2.png>)
+
+### Part 4.2. Утилита nmap
+
+- Командой **ping** найти машину, которая не "пингуется", после чего утилитой **nmap** показать, что хост машины запущен
+*Проверка: в выводе nmap должно быть сказано: `Host is up`*
+- В отчёт поместить скрины с вызовом и выводом использованных команд **ping** и **nmap**.
+
+- `sudo apt install nmap`
+
+
+- `ping 172.24.116.8`
+![Alt text](<img/ping ws1 - ws2.png>)
+- `sudo nmap 172.24.116.8`
+![Alt text](<img/nmap ws1.png>)
+- `ping 192.168.100.10`
+![Alt text](<img/ping ws2-ws1.png>)
+- `sudo nmap 192.168.100.10`
+![Alt text](<img/nmap ws2.png>)
+
+## Part 5. Статическая маршрутизация сети
+
+Подними пять виртуальных машин (3 рабочие станции (ws11, ws21, ws22) и 2 роутера (r1, r2)).
+
+![Alt text](img/part5_network.png)

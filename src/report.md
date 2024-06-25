@@ -501,3 +501,98 @@ default via 10.10.0.1 dev eth0
 **p.s. Ни в коем случае не сохранять дампы в гит!**
 
 ## Part 6. Динамическая настройка IP с помощью DHCP
+
+Информация про DHCP [тут](https://logi.cc/kaketo-nastrojka-dhcp-servera-na-linux/#.YxLMhtZBzhY), [тут](https://ixnfo.com/ustanovka-i-nastroyka-isc-dhcp-server-v-ubuntu.html) и [тут](https://sysadmin-note.ru/article/ustanovka-i-nastrojka-dhcp-servera-v-ubuntu/) и еще [тут](https://help.ubuntu.ru/wiki/%D1%80%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%BE_%D0%BF%D0%BE_ubuntu_server/%D1%81%D0%B5%D1%82%D1%8C/dhcp)
+
+##### Для r2 настроить в файле */etc/dhcp/dhcpd.conf* конфигурацию службы **DHCP**:
+##### 1) указать адрес маршрутизатора по-умолчанию, DNS-сервер и адрес внутренней сети. Пример файла для r2:
+```shell
+subnet 10.100.0.0 netmask 255.255.0.0 {}
+
+subnet 10.20.0.0 netmask 255.255.255.192
+{
+    range 10.20.0.2 10.20.0.50;
+    option routers 10.20.0.1;
+    option domain-name-servers 10.20.0.1;
+}
+```
+
+![Alt text](img/6.png)
+##### 2) в файле *resolv.conf* прописать `nameserver 8.8.8.8.`
+- В отчёт поместить скрины с содержанием изменённых файлов.
+![Alt text](img/7.png)
+##### Перезагрузить службу **DHCP** командой `systemctl restart isc-dhcp-server`. Машину ws21 перезагрузить при помощи `reboot` и через `ip a` показать, что она получила адрес. Также пропинговать ws22 с ws21.
+- В отчёт поместить скрины с вызовом и выводом использованных команд.
+
+***Перезагрузка службы dhcp***
+![Alt text](img/8.png)
+
+***Изменим настройки машин ws21 и ws22 в файле конфигурации, чтобы сделать протокол DHCP активным. На каждой машине введём***
+![Alt text](img/9.png)
+![Alt text](img/10.png)
+
+Затем применим новые настройки `sudo netplan apply`<br>
+И перезагрузим
+
+`ip a`
+![Alt text](img/11.png)
+
+**Также пропинговать ws22 с ws21.**
+![Alt text](img/12.png)
+
+##### Указать MAC адрес у ws11, для этого в *etc/netplan/00-installer-config.yaml* надо добавить строки: `macaddress: 10:10:10:10:10:BA`, `dhcp4: true`
+- В отчёт поместить скрин с содержанием изменённого файла *etc/netplan/00-installer-config.yaml*.
+
+![Alt text](img/13.png)
+Затем мы выключаем машину и изменяем сеть
+`sudo shutdown -h now`
+![Alt text](img/14.png)
+##### Для r1 настроить аналогично r2, но сделать выдачу адресов с жесткой привязкой к MAC-адресу (ws11). Провести аналогичные тесты
+- В отчёте этот пункт описать аналогично настройке для r2.
+![Alt text](img/19.png)
+![Alt text](img/16.png)
+Перезагружаем службу `systemctl restart isc-dhcp-server`
+![Alt text](img/17.png)
+Проверяем статус `sudo systemctl status isc-dhcp-server`
+![Alt text](img/18.png)
+
+Проверка ws11 `ip a`
+![Alt text](img/20.png)
+
+Пропинговываем с ws22
+![Alt text](img/21.png)
+##### Запросить с ws21 обновление ip адреса
+- В отчёте поместить скрины ip до и после обновления.
+- В отчёте описать, какими опциями **DHCP** сервера пользовались в данном пункте.
+`ip a` До обновления
+![Alt text](img/22.png)
+
+Запросим с **ws21** обновление ip адреса с помощью команды
+`sudo dhclient -v`<br>
+-v - будет выведена дополнительная информация.
+![Alt text](img/23.png)
+`ip a`
+![Alt text](img/24.png)
+
+Выполним команду для удаления старого IP адреса
+`sudo dhclient -r`<br>
+-r - явно освобождает текущую аренду ip адреса.
+![Alt text](img/25.png)
+
+***Чтобы обновить или освободить IP-адрес для конкретного интерфейса, например, eth0, необходимо ввести:***
+
+`sudo dhclient -r eth0`
+
+`sudo dhclient eth0`
+
+Проверим IP адреса
+
+`ip a`
+![Alt text](img/26.png)
+
+>В части 6 были использованы следующие опции DHCP протокола:
+
+>**option routers ip-address [, ip-address...];** - адреса шлюзов для клиентской сети. Маршрутизаторы должны быть перечислены в порядке предпочтительности.<br><br>
+>**option domain-name-servers ip-address [, ip-address...];** - Список DNS серверов доступных клиенту. Сервера должны быть перечислены в порядке предпочтительности.
+##### Сохранить дампы образов виртуальных машин
+**p.s. Ни в коем случае не сохранять дампы в гит!**
